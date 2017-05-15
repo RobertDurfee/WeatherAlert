@@ -1,38 +1,31 @@
 import urllib2
 import json
-import winsound
 import time
+from twilio.rest import Client
 
-appid = '<ENTER_YOUR_APP_ID_HERE>'
+client = Client('<TWILIO_ACCOUNT_ID>', '<TWILIO_AUTHENTICATION_TOKEN>')
+
+appid = '<OPEN_WEATHER_MAP_APPLICATION_ID>'
 
 city = raw_input("City: ")
 temperature = float(raw_input("Maximum Temperature: "))
 
+url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=imperial&appid=' + appid
+
 while True:
 
-    try:
+    response = urllib2.urlopen(url)
+    html = response.read()
 
-        url = 'http://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=imperial&appid=' + appid
+    data = json.loads(html)
 
-        while True:
+    if float(data['main']['temp']) > temperature:
 
-            response = urllib2.urlopen(url)
-            html = response.read()
+        client.messages.create(to='<PHONE_NUMBER>', from_='<TWILIO_PHONE_NUMBER>', body='The temperature in ' + city +
+                                                                             ' is now higher than ' + str(temperature) +
+                                                                             ' degrees. (' + str(data['main']['temp']) +
+                                                                             ' degrees)')
 
-            data = json.loads(html)
+        exit(0)
 
-            if float(data['main']['temp']) > temperature:
-
-                while True:
-
-                    for i in xrange(5):
-
-                        winsound.Beep(800, 990)
-
-                    time.sleep(5)
-
-            time.sleep(600)  # Do not remove this otherwise your IP will be blocked!
-
-    except:
-
-        continue
+    time.sleep(600)  # Do not remove this otherwise your IP will be blocked!
