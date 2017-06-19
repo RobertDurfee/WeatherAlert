@@ -1,6 +1,9 @@
 # WeatherAlert
 A simple python script for sending an SMS message when it reaches a certain temperature at a certain location.
 
+### Disclaimer
+This is not production-worthy code! View this simply as a proof-of-concept. Preconditions are implicit. No error checking exists.
+
 ### Initialization
 You first must create an account with Twilio and Open Weather Map to gain free API keys.
 
